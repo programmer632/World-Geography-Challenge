@@ -24,7 +24,6 @@ def resource_path(relative_path):
 
 # File paths
 imaje = resource_path("186-europis-70x100-1.ico")
-send_answer = os.path.join(base_path, "skore.txt")  # Saved next to the .exe
 path = os.path.join(base_path, "data.json")         # Saved next to the .exe
 
 font = QFont("Calibri", 18)
@@ -271,13 +270,7 @@ def create_leaderboard_table(leaderboard_window, layout):
     layout.insertWidget(0, table_view)
 
 def show_leaderboard():
-    global correct_count, send_answer
-    x = correct_count * 2
-    try:
-        with open(send_answer, 'w', encoding='utf-8') as file:
-            file.write(str(x))
-    except PermissionError:
-        print("Error: No write permissions in the folder.")
+    global correct_count
     show_leaderboard_window()
 
 def show_marks(window, ans10, qu10, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
