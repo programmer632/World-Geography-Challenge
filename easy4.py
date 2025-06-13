@@ -1,25 +1,11 @@
-from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5.QtCore import Qt
 import os
 import sys
 import random
-
-qu4 = None
-ans = 0
+from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt
 
 # --- LANGUAGE SUPPORT ---
-language_file = os.path.join(os.path.dirname(__file__), "language.txt")
-def load_language():
-    try:
-        with open(language_file, 'r', encoding='utf-8') as f:
-            lang = f.read().strip().capitalize()
-            if lang in translations:
-                return lang
-    except Exception:
-        pass
-    return "English"
-
 translations = {
     "English": {
         "q1": "4. What is the most densely populated\ncountry in Europe?",
@@ -46,7 +32,7 @@ translations = {
         "A3": "A) France", "B3": "B) Allemagne", "C3": "C) Italie", "D3": "D) Suisse"
     }
 }
-current_language = load_language()
+current_language = "English"
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
@@ -54,11 +40,17 @@ def tr(key):
 # Receives the window, previous score, and correctness of previous questions
 # Sets up the fourth question and answer buttons
 
-def easy(window, ans3, qu3, qu2, qu1):
+ans = 0
+qu4 = None
+
+def easy(window, ans3, qu3, qu2, qu1, current_language):
     global qu4, ans
-    ans += ans3  # Add previous score to current score
+    ans += ans3
     font = QFont("Calibri", 13)
-    instance = random.randint(1, 3)  # Randomly select which question to show
+    instance = random.randint(1, 3)
+
+    def tr(key):
+        return translations.get(current_language, translations["English"]).get(key, key)
 
     # Create the question label, centered horizontally
     question = QLabel("", window)
@@ -91,11 +83,11 @@ def easy(window, ans3, qu3, qu2, qu1):
             widget.deleteLater()
         print(ans)
         print(qu4)
-        easy5.easy(window, ans, qu4, qu3, qu2, qu1)
+        easy5.easy(window, ans, qu4, qu3, qu2, qu1, current_language)
 
     # Answer button callbacks for each possible answer
     # Each function checks which question is active and updates the score and correctness accordingly
-    def answer_dania():
+    def answer_a():
         global qu4, ans
         if instance == 1:
             qu4 = False
@@ -108,21 +100,19 @@ def easy(window, ans3, qu3, qu2, qu1):
             ans += 2
             next_question()
 
-    def answer_kroatia():
+    def answer_b():
         global qu4, ans
         if instance == 1:
             qu4 = False
-            ans += 2
             next_question()
         elif instance == 2:
             qu4 = False
             next_question()
         elif instance == 3:
-            qu4 = True
-            ans += 2
+            qu4 = False
             next_question()
 
-    def answer_norway():
+    def answer_c():
         global qu4, ans
         if instance == 1:
             qu4 = False
@@ -135,7 +125,7 @@ def easy(window, ans3, qu3, qu2, qu1):
             qu4 = False
             next_question()
 
-    def answer_lichtenstain():
+    def answer_d():
         global qu4, ans
         if instance == 1:
             qu4 = True
@@ -172,26 +162,26 @@ def easy(window, ans3, qu3, qu2, qu1):
     dania.move(250, 140)
     dania.setFont(font)
     dania.show()
-    dania.clicked.connect(answer_dania)
+    dania.clicked.connect(answer_a)
 
     kroatia = QPushButton("", window)
     kroatia.setFont(font)
     kroatia.resize(500, 120)
     kroatia.move(250, 270)
     kroatia.show()
-    kroatia.clicked.connect(answer_kroatia)
+    kroatia.clicked.connect(answer_b)
 
     norway = QPushButton("", window)
     norway.resize(500, 120)
     norway.move(250, 400)
     norway.setFont(font)
     norway.show()
-    norway.clicked.connect(answer_norway)
+    norway.clicked.connect(answer_c)
 
     poland = QPushButton("", window)
     poland.resize(500, 120)
     poland.move(250, 530)
     poland.setFont(font)
     poland.show()
-    poland.clicked.connect(answer_lichtenstain)
+    poland.clicked.connect(answer_d)
     set_correct_text()

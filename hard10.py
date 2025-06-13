@@ -1,24 +1,9 @@
-from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5.QtCore import Qt
 import os
 import sys
 import random
-
-qu10 = None
-ans = 0
-
-# --- LANGUAGE SUPPORT ---
-language_file = os.path.join(os.path.dirname(__file__), "language.txt")
-def load_language():
-    try:
-        with open(language_file, 'r', encoding='utf-8') as f:
-            lang = f.read().strip().capitalize()
-            if lang in translations:
-                return lang
-    except Exception:
-        pass
-    return "English"
+from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt
 
 translations = {
     "English": {
@@ -46,7 +31,7 @@ translations = {
         "A3": "A) Égypte et Soudan", "B3": "B) Algérie et Sahara occidental", "C3": "C) Afrique du Sud", "D3": "D) Libye"
     }
 }
-current_language = load_language()
+current_language = "English"
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
@@ -55,12 +40,12 @@ def hard(window, prev_score, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
     ans += prev_score
     font = QFont("Calibri", 13)
     instance = random.randint(1, 3)
-    current_language = load_language()
+    current_language = "English"
 
     question_label = QLabel("", window)
     question_label.setFont(font)
-    question_label.setWordWrap(True)
-    question_label.setAlignment(Qt.AlignCenter)
+    question_label.setWordWrap(True)  # Enable word wrap
+    question_label.setAlignment(Qt.AlignCenter)  # Center the text in the label
 
     # Set question text (multilingual)
     if instance == 1:
@@ -85,7 +70,7 @@ def hard(window, prev_score, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
             widget.deleteLater()
         print(ans)
         print(qu10)
-        marks.show_marks(window, ans, qu10, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1)
+        marks.show_marks(window, ans, qu10, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1, current_language)
 
     # Answer button callbacks for each possible answer
     def answer_a():

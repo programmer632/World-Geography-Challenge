@@ -10,15 +10,6 @@ ans = 0
 
 # --- LANGUAGE SUPPORT ---
 language_file = os.path.join(os.path.dirname(__file__), "language.txt")
-def load_language():
-    try:
-        with open(language_file, 'r', encoding='utf-8') as f:
-            lang = f.read().strip().capitalize()
-            if lang in translations:
-                return lang
-    except Exception:
-        pass
-    return "English"
 
 translations = {
     "English": {
@@ -46,16 +37,18 @@ translations = {
         "A3": "A) Nicaragua", "B3": "B) Guatemala", "C3": "C) Salvador", "D3": "D) Panama"
     }
 }
-current_language = load_language()
+current_language = "English"
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
-def normal(window, ans4, qu4, qu3, qu2, qu1):
-    global qu5, ans, current_language
+def normal(window, ans4, qu4, qu3, qu2, qu1, current_language):
+    global qu5, ans
     ans += ans4
     font = QFont("Calibri", 13)
     instance = random.randint(1, 3)
-    current_language = load_language()
+
+    def tr(key):
+        return translations.get(current_language, translations["English"]).get(key, key)
 
     question = QLabel("", window)
     question.setFont(font)
@@ -85,7 +78,7 @@ def normal(window, ans4, qu4, qu3, qu2, qu1):
             widget.deleteLater()
         print(ans)
         print(qu5)
-        normal6.normal(window, ans, qu5, qu4, qu3, qu2, qu1)
+        normal6.normal(window, ans, qu5, qu4, qu3, qu2, qu1, current_language)
 
     # Answer button callbacks for each possible answer
     def answer_a():

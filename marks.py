@@ -342,7 +342,25 @@ def show_leaderboard():
     global correct_count
     show_leaderboard_window()
 
-def show_marks(window, ans10, qu10, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
+def show_marks(window, ans10, qu10, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1, current_language=None):
+    # --- LANGUAGE HANDLING ---
+    # Αν δοθεί όρισμα, χρησιμοποίησέ το, αλλιώς φόρτωσε από αρχείο
+    if current_language is not None:
+        lang = current_language
+    else:
+        try:
+            with open(language_file, 'r', encoding='utf-8') as f:
+                lang = f.read().strip().capitalize()
+                if lang not in translations:
+                    lang = "English"
+        except Exception:
+            lang = "English"
+    def tr(key, **kwargs):
+        text = translations.get(lang, translations["English"]).get(key, key)
+        if kwargs:
+            return text.format(**kwargs)
+        return text
+
     layout = QVBoxLayout()
     layout.setAlignment(Qt.AlignCenter)
     layout.setSpacing(10)

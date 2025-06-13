@@ -1,24 +1,10 @@
 from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
-import os
-import sys
 import random
 
 qu6 = None
 ans = 0
-
-# --- LANGUAGE SUPPORT ---
-language_file = os.path.join(os.path.dirname(__file__), "language.txt")
-def load_language():
-    try:
-        with open(language_file, 'r', encoding='utf-8') as f:
-            lang = f.read().strip().capitalize()
-            if lang in translations:
-                return lang
-    except Exception:
-        pass
-    return "English"
 
 translations = {
     "English": {
@@ -46,16 +32,18 @@ translations = {
         "A3": "A) Mongolie", "B3": "B) Thaïlande", "C3": "C) Vietnam", "D3": "D) Afghanistan"
     }
 }
-current_language = load_language()
+current_language = "English"
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
-def normal(window, ans5, qu5, qu4, qu3, qu2, qu1):
-    global qu6, ans, current_language
+def normal(window, ans5, qu5, qu4, qu3, qu2, qu1, current_language):
+    global qu6, ans
     ans += ans5
     font = QFont("Calibri", 13)
     instance = random.randint(1, 3)
-    current_language = load_language()
+
+    def tr(key):
+        return translations.get(current_language, translations["English"]).get(key, key)
 
     question = QLabel("", window)
     question.setFont(font)
@@ -85,7 +73,7 @@ def normal(window, ans5, qu5, qu4, qu3, qu2, qu1):
             widget.deleteLater()
         print(ans)
         print(qu6)
-        normal7.normal(window, ans, qu6, qu5, qu4, qu3, qu2, qu1)
+        normal7.normal(window, ans, qu6, qu5, qu4, qu3, qu2, qu1, current_language)
 
     # Answer button callbacks for each possible answer
     def answer_a():
@@ -139,7 +127,6 @@ def normal(window, ans5, qu5, qu4, qu3, qu2, qu1):
             qu6 = False
             next_question()
 
-    # Set the button texts according to the question instance (multilingual)
     def set_button_texts():
         if instance == 1:
             button_a.setText(tr('A1'))

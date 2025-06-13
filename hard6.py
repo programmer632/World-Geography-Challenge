@@ -1,26 +1,11 @@
-from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5.QtCore import Qt
 import os
 import sys
 import random
-
-# Variables for score and correctness of question 6
-qu6 = None  # Whether question 6 was answered correctly
-ans = 0     # User's score for the hard level
+from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt
 
 # --- LANGUAGE SUPPORT ---
-language_file = os.path.join(os.path.dirname(__file__), "language.txt")
-def load_language():
-    try:
-        with open(language_file, 'r', encoding='utf-8') as f:
-            lang = f.read().strip().capitalize()
-            if lang in translations:
-                return lang
-    except Exception:
-        pass
-    return "English"
-
 translations = {
     "English": {
         "q1": "6. What is the most spoken language in Africa?",
@@ -47,7 +32,7 @@ translations = {
         "A3": "A) Ghana", "B3": "B) Sénégal", "C3": "C) Côte d'Ivoire", "D3": "D) Cameroun"
     }
 }
-current_language = load_language()
+current_language = "English"
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
@@ -55,18 +40,17 @@ def tr(key):
 # Receives the window, previous score, and correctness of previous questions
 # Sets up the question and answer buttons
 
-def hard(window, prev_score, qu5, qu4, qu3, qu2, qu1):
-    global qu6, ans, current_language
+def hard(window, prev_score, qu5, qu4, qu3, qu2, qu1, current_language):
+    global qu6, ans
     ans += prev_score
     font = QFont("Calibri", 13)
     instance = random.randint(1, 3)
-    current_language = load_language()
 
     # Create the question label, centered
     question_label = QLabel("", window)
     question_label.setFont(font)
     question_label.setWordWrap(True)  # Enable word wrap
-    question_label.setAlignment(Qt.AlignCenter)
+    question_label.setAlignment(Qt.AlignCenter)  # Center the text in the label
 
     # Set question text (multilingual)
     if instance == 1:
@@ -94,7 +78,7 @@ def hard(window, prev_score, qu5, qu4, qu3, qu2, qu1):
             widget.deleteLater()
         print(ans)
         print(qu6)
-        hard7.hard(window, ans, qu6, qu5, qu4, qu3, qu2, qu1)
+        hard7.hard(window, ans, qu6, qu5, qu4, qu3, qu2, qu1, current_language)
 
     # Answer button callbacks for each possible answer
     def answer_a():
@@ -113,7 +97,8 @@ def hard(window, prev_score, qu5, qu4, qu3, qu2, qu1):
     def answer_b():
         global qu6, ans
         if instance == 1:
-            qu6 = False
+            qu6 = True
+            ans += 2
             next_question()
         elif instance == 2:
             qu6 = False

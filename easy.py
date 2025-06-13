@@ -1,21 +1,9 @@
-from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5.QtCore import Qt
 import os
 import sys
 import random
-
-# --- LANGUAGE SUPPORT ---
-language_file = os.path.join(os.path.dirname(__file__), "language.txt")
-def load_language():
-    try:
-        with open(language_file, 'r', encoding='utf-8') as f:
-            lang = f.read().strip().capitalize()
-            if lang in translations:
-                return lang
-    except Exception:
-        pass
-    return "English"
+from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt
 
 translations = {
     "English": {
@@ -46,23 +34,27 @@ translations = {
         "D": "D) Liechtenstein"
     }
 }
-current_language = load_language()
+current_language = "English"
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
 # Main function for the 'Easy' quiz level
 # Sets up the first question and answer buttons
 
-def easy(window):  
+def easy(window, current_language):  
     global font, ans, qu1
-    font = QFont("Calibri", 13)  # Set the font for all widgets
-    ans = 0  # User's score for this level
-    qu1 = None  # Whether the first question was answered correctly
-    instance = random.randint(1, 3)  # Randomly select which question to show
+    font = QFont("Calibri", 13)
+    ans = 0
+    qu1 = None
+    instance = random.randint(1, 3)
+
+    def tr(key):
+        return translations.get(current_language, translations["English"]).get(key, key)
 
     # Create the question label, centered horizontally
     question = QLabel("", window)
     question.setFont(font)
+    question.setWordWrap(True)  # Enable word wrap
     question.setAlignment(Qt.AlignCenter)  # Center the text in the label
 
     # Set the question text based on the random variant (translated)
@@ -93,13 +85,13 @@ def easy(window):
         print(ans)
         print(qu1)
         try:
-            easy2.easy(window, ans, qu1)
+            easy2.easy(window, ans, qu1, current_language)
         except Exception as e:
             print(f"Error: {e}")  # Print any error that occurs
 
     # Answer button callbacks for each possible answer
     # Each function checks which question is active and updates the score and correctness accordingly
-    def answer_dania():
+    def answer_a():
         global qu1, ans
         if instance == 1:
             qu1 = False
@@ -112,7 +104,7 @@ def easy(window):
             ans += 2
             next_question()
 
-    def answer_latvia():
+    def answer_b():
         global qu1, ans
         if instance == 1:
             qu1 = False
@@ -124,7 +116,7 @@ def easy(window):
             qu1 = False
             next_question()
 
-    def answer_norway():
+    def answer_c():
         global qu1, ans
         if instance == 1:
             qu1 = True
@@ -137,7 +129,7 @@ def easy(window):
             qu1 = False
             next_question()
 
-    def answer_lichtenstain():
+    def answer_d():
         global qu1, ans
         if instance == 1:
             qu1 = False
@@ -150,31 +142,31 @@ def easy(window):
             qu1 = False
             next_question()
 
-    # Create answer buttons with translated text and connect them to the correct callback
-    dania = QPushButton(tr("A"), window)
-    dania.resize(500, 120)
-    dania.move(250, 130)
-    dania.setFont(font)
-    dania.show()
-    dania.clicked.connect(answer_dania)
+    # Create answer buttons with generic names and connect them to the correct callback
+    button_a = QPushButton(tr("A"), window)
+    button_a.resize(500, 120)
+    button_a.move(250, 130)
+    button_a.setFont(font)
+    button_a.show()
+    button_a.clicked.connect(answer_a)
 
-    andora = QPushButton(tr("B"), window)
-    andora.setFont(font)
-    andora.resize(500, 120)
-    andora.move(250, 260)
-    andora.show()
-    andora.clicked.connect(answer_latvia)
+    button_b = QPushButton(tr("B"), window)
+    button_b.setFont(font)
+    button_b.resize(500, 120)
+    button_b.move(250, 260)
+    button_b.show()
+    button_b.clicked.connect(answer_b)
 
-    norway = QPushButton(tr("C"), window)
-    norway.resize(500, 120)
-    norway.move(250, 390)
-    norway.setFont(font)
-    norway.show()
-    norway.clicked.connect(answer_norway)
+    button_c = QPushButton(tr("C"), window)
+    button_c.resize(500, 120)
+    button_c.move(250, 390)
+    button_c.setFont(font)
+    button_c.show()
+    button_c.clicked.connect(answer_c)
 
-    lichtenstain = QPushButton(tr("D"), window)
-    lichtenstain.resize(500, 120)
-    lichtenstain.move(250, 520)
-    lichtenstain.setFont(font)
-    lichtenstain.show()
-    lichtenstain.clicked.connect(answer_lichtenstain)
+    button_d = QPushButton(tr("D"), window)
+    button_d.resize(500, 120)
+    button_d.move(250, 520)
+    button_d.setFont(font)
+    button_d.show()
+    button_d.clicked.connect(answer_d)

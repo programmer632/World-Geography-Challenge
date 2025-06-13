@@ -1,24 +1,13 @@
 # This module contains the first question for the 'hard' level of the geography quiz.
 # All UI text and comments have been translated to English, and variable/function names clarified.
-from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5.QtCore import Qt
 import os
 import sys
 import random
+from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt
 
 # --- LANGUAGE SUPPORT ---
-language_file = os.path.join(os.path.dirname(__file__), "language.txt")
-def load_language():
-    try:
-        with open(language_file, 'r', encoding='utf-8') as f:
-            lang = f.read().strip().capitalize()
-            if lang in translations:
-                return lang
-    except Exception:
-        pass
-    return "English"
-
 translations = {
     "English": {
         "q1": "1. What is the largest country by area in Africa?",
@@ -45,11 +34,11 @@ translations = {
         "A3": "A) Tanzanie", "B3": "B) Kenya", "C3": "C) Éthiopie", "D3": "D) Ouganda"
     }
 }
-current_language = load_language()
+current_language = "English"
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
-def hard(window):
+def hard(window, current_language="English"):
     # Set up global variables for font, answer score, and question correctness
     global font, score, is_question_correct
     font = QFont("Calibri", 13)
@@ -58,11 +47,14 @@ def hard(window):
     # Randomly select which question to show (1, 2, or 3)
     question_number = random.randint(1, 3)
 
+    def tr(key):
+        return translations.get(current_language, translations["English"]).get(key, key)
+
     # Create the question label, centered and with word wrap
     question_label = QLabel("", window)
     question_label.setFont(font)
-    question_label.setWordWrap(True)
-    question_label.setAlignment(Qt.AlignCenter)
+    question_label.setWordWrap(True)  # Enable word wrap
+    question_label.setAlignment(Qt.AlignCenter)  # Center the text in the label
 
     # Set the question text based on the random selection
     if question_number == 1:
@@ -90,7 +82,7 @@ def hard(window):
         print(score)
         print(is_question_correct)
         try:
-            hard2.hard(window, score, is_question_correct)
+            hard2.hard(window, score, is_question_correct, current_language)
         except Exception as e:
             print(f"Error: {e}")
 
@@ -105,7 +97,8 @@ def hard(window):
             is_question_correct = False
             next_question()
         elif question_number == 3:
-            is_question_correct = False
+            is_question_correct = True  # Tanzania is correct for Kilimanjaro
+            score += 2
             next_question()
 
     def answer_option_b():
@@ -129,8 +122,7 @@ def hard(window):
             is_question_correct = False
             next_question()
         elif question_number == 3:
-            is_question_correct = True  # Ethiopia is correct for Kilimanjaro (but actually, Tanzania is correct)
-            score += 2
+            is_question_correct = False  # Ethiopia is NOT correct for Kilimanjaro
             next_question()
 
     def answer_option_d():
@@ -165,28 +157,28 @@ def hard(window):
             button_d.setText(tr("D3"))
 
     # Create answer buttons and connect them to their handlers
-    button_a = QPushButton("A) Algeria", window)
+    button_a = QPushButton("", window)
     button_a.resize(500, 120)
     button_a.move(250, 130)
     button_a.setFont(font)
     button_a.show()
     button_a.clicked.connect(answer_option_a)
 
-    button_b = QPushButton("B) Democratic Republic of the Congo", window)
+    button_b = QPushButton("", window)
     button_b.setFont(font)
     button_b.resize(500, 120)
     button_b.move(250, 260)
     button_b.show()
     button_b.clicked.connect(answer_option_b)
 
-    button_c = QPushButton("C) Norway", window)  # Placeholder, will be set by set_button_texts()
+    button_c = QPushButton("", window)
     button_c.resize(500, 120)
     button_c.move(250, 390)
     button_c.setFont(font)
     button_c.show()
     button_c.clicked.connect(answer_option_c)
 
-    button_d = QPushButton("D) Liechtenstein", window)  # Placeholder, will be set by set_button_texts()
+    button_d = QPushButton("", window)
     button_d.resize(500, 120)
     button_d.move(250, 520)
     button_d.setFont(font)

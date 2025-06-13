@@ -7,19 +7,6 @@ import random
 
 qu2 = None
 ans = 0
-current_language = "English"  # Default language
-
-# --- LANGUAGE SUPPORT ---
-language_file = os.path.join(os.path.dirname(__file__), "language.txt")
-def load_language():
-    try:
-        with open(language_file, 'r', encoding='utf-8') as f:
-            lang = f.read().strip().capitalize()
-            if lang in translations:
-                return lang
-    except Exception:
-        pass
-    return "English"
 
 translations = {
     "English": {
@@ -47,16 +34,16 @@ translations = {
         "A3": "A) Iran", "B3": "B) Pakistan", "C3": "C) Syrie", "D3": "D) Turquie"
     }
 }
-current_language = load_language()
-def tr(key):
-    return translations.get(current_language, translations["English"]).get(key, key)
-
-def normal(window, ans1, qu1):
-    global qu2, ans, current_language
+current_language = "English"
+def normal(window, ans1, qu1, current_language):
+    global qu2, ans
     ans += ans1
     font = QFont("Calibri", 13)
     instance = random.randint(1, 3)
-    current_language = load_language()
+
+    def tr(key):
+        return translations.get(current_language, translations["English"]).get(key, key)
+
     question = QLabel("", window)
     question.setFont(font)
     question.setWordWrap(True)
@@ -84,7 +71,7 @@ def normal(window, ans1, qu1):
             widget.deleteLater()
         print(ans)
         print(qu2)
-        normal3.normal(window, ans, qu2, qu1)
+        normal3.normal(window, ans, qu2, qu1, current_language)
 
     # Answer button callbacks for each possible answer
     # Each function checks which question is active and updates the score and correctness accordingly

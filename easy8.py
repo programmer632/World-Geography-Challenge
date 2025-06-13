@@ -1,21 +1,9 @@
-from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5.QtCore import Qt
 import os
 import sys
 import random
-
-# --- LANGUAGE SUPPORT ---
-language_file = os.path.join(os.path.dirname(__file__), "language.txt")
-def load_language():
-    try:
-        with open(language_file, 'r', encoding='utf-8') as f:
-            lang = f.read().strip().capitalize()
-            if lang in translations:
-                return lang
-    except Exception:
-        pass
-    return "English"
+from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt
 
 translations = {
     "English": {
@@ -43,7 +31,7 @@ translations = {
         "A3": "A) Vienne", "B3": "B) Chisinau", "C3": "C) Minsk", "D3": "D) Erevan"
     }
 }
-current_language = load_language()
+current_language = "English"
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
@@ -54,11 +42,14 @@ ans = 0
 # Receives the window, previous score, and correctness of previous questions
 # Sets up the eighth question and answer buttons
 
-def easy(window, ans7, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
+def easy(window, ans7, qu7, qu6, qu5, qu4, qu3, qu2, qu1, current_language):
     global qu8, ans
-    ans += ans7  # Add previous score to current score
+    ans += ans7
     font = QFont("Calibri", 13)
-    instance = random.randint(1, 3)  # Randomly select which question to show
+    instance = random.randint(1, 3)
+
+    def tr(key):
+        return translations.get(current_language, translations["English"]).get(key, key)
 
     # Create the question label, centered horizontally
     question = QLabel("", window)
@@ -91,11 +82,11 @@ def easy(window, ans7, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
             widget.deleteLater()
         print(ans)
         print(qu8)
-        easy9.easy(window, ans, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1)
+        easy9.easy(window, ans, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1, current_language)
 
     # Answer button callbacks for each possible answer
     # Each function checks which question is active and updates the score and correctness accordingly
-    def answer_dania():
+    def answer_a():
         global qu8, ans
         if instance == 1:
             qu8 = False
@@ -108,7 +99,7 @@ def easy(window, ans7, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
             qu8 = False
             next_question()
 
-    def answer_kroatia():
+    def answer_b():
         global qu8, ans
         if instance == 1:
             qu8 = False
@@ -120,7 +111,7 @@ def easy(window, ans7, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
             qu8 = False
             next_question()
 
-    def answer_norway():
+    def answer_c():
         global qu8, ans
         if instance == 1:
             qu8 = False
@@ -133,7 +124,7 @@ def easy(window, ans7, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
             ans += 2
             next_question()
 
-    def answer_lichtenstain():
+    def answer_d():
         global qu8, ans
         if instance == 1:
             qu8 = True
@@ -149,20 +140,20 @@ def easy(window, ans7, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
     # Set the button texts according to the question instance (all in English)
     def set_correct_text():
         if instance == 1:
-            dania.setText("A) Pyrenees")
-            kroatia.setText("B) Carpathians")
-            norway.setText("C) Alps")
-            poland.setText("D) Urals")
+            dania.setText(tr("A1"))
+            kroatia.setText(tr("B1"))
+            norway.setText(tr("C1"))
+            poland.setText(tr("D1"))
         if instance == 2:
-            dania.setText("A) Jutland")
-            kroatia.setText("B) Kola")
-            norway.setText("C) Crimea")
-            poland.setText("D) Balkan Peninsula")
+            dania.setText(tr("A2"))
+            kroatia.setText(tr("B2"))
+            norway.setText(tr("C2"))
+            poland.setText(tr("D2"))
         if instance == 3:
-            dania.setText("A) Vienna")
-            kroatia.setText("B) Chisinau")
-            norway.setText("C) Minsk")
-            poland.setText("D) Yerevan")
+            dania.setText(tr("A3"))
+            kroatia.setText(tr("B3"))
+            norway.setText(tr("C3"))
+            poland.setText(tr("D3"))
 
     # Create answer buttons with translated text and connect them to the correct callback
     dania = QPushButton(tr(f"A{instance}"), window)
@@ -170,26 +161,26 @@ def easy(window, ans7, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
     dania.move(250, 140)
     dania.setFont(font)
     dania.show()
-    dania.clicked.connect(answer_dania)
+    dania.clicked.connect(answer_a)
 
     kroatia = QPushButton(tr(f"B{instance}"), window)
     kroatia.setFont(font)
     kroatia.resize(500, 120)
     kroatia.move(250, 270)
     kroatia.show()
-    kroatia.clicked.connect(answer_kroatia)
+    kroatia.clicked.connect(answer_b)
 
     norway = QPushButton(tr(f"C{instance}"), window)
     norway.resize(500, 120)
     norway.move(250, 400)
     norway.setFont(font)
     norway.show()
-    norway.clicked.connect(answer_norway)
+    norway.clicked.connect(answer_c)
 
     poland = QPushButton(tr(f"D{instance}"), window)
     poland.resize(500, 120)
     poland.move(250, 530)
     poland.setFont(font)
     poland.show()
-    poland.clicked.connect(answer_lichtenstain)
+    poland.clicked.connect(answer_d)
     set_correct_text()

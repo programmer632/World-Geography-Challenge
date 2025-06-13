@@ -192,19 +192,19 @@ def go_to_easy():
     for widget in window.children():
         widget.deleteLater()
     window.repaint()
-    easy.easy(window)
+    easy.easy(window, current_language)
 
 def go_to_normal():
     for widget in window.children():
         widget.deleteLater()
     window.repaint()
-    normal.normal(window)
+    normal.normal(window, current_language)
 
 def go_to_hard():
     for widget in window.children():
         widget.deleteLater()
     window.repaint()
-    hard.hard(window)
+    hard.hard(window, current_language)
 
 # The main function that initializes the main menu and handles navigation between screens.
 def start():

@@ -10,15 +10,6 @@ qu1 = None
 
 # --- LANGUAGE SUPPORT ---
 language_file = os.path.join(os.path.dirname(__file__), "language.txt")
-def load_language():
-    try:
-        with open(language_file, 'r', encoding='utf-8') as f:
-            lang = f.read().strip().capitalize()
-            if lang in translations:
-                return lang
-    except Exception:
-        pass
-    return "English"
 
 translations = {
     "English": {
@@ -46,7 +37,7 @@ translations = {
         "A3": "A) Chili", "B3": "B) Bolivie", "C3": "C) Uruguay", "D3": "D) Pérou"
     }
 }
-current_language = load_language()
+current_language = "English"
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
@@ -54,10 +45,13 @@ def tr(key):
 # Receives the window and sets up the first question and answer buttons
 # All text, comments, and variable names are in English for consistency
 
-def normal(window):
+def normal(window, current_language):
     global ans, qu1
     font = QFont("Calibri", 13)
-    instance = random.randint(1, 3)  # Randomly select which question to show
+    instance = random.randint(1, 3)
+
+    def tr(key):
+        return translations.get(current_language, translations["English"]).get(key, key)
 
     # Create the question label, centered horizontally
     question = QLabel("", window)
@@ -66,8 +60,6 @@ def normal(window):
     question.setAlignment(Qt.AlignCenter)
 
     # Reload language in case it was changed in settings before this question
-    global current_language
-    current_language = load_language()
     # Set the question text based on the random variant (multilingual)
     if instance == 1:
         question.setText(tr("q1"))
@@ -94,7 +86,7 @@ def normal(window):
         print(ans)
         print(qu1)
         try:
-            normal2.normal(window, ans, qu1)
+            normal2.normal(window, ans, qu1, current_language)
         except Exception as e:
             print(f"Error: {e}")
 

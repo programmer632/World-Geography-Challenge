@@ -50,12 +50,14 @@ current_language = load_language()
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
-def normal(window, ans9, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
-    global qu10, ans, current_language
+def normal(window, ans9, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1, current_language):
+    global qu10, ans
     ans += ans9
     font = QFont("Calibri", 13)
     instance = random.randint(1, 3)
-    current_language = load_language()
+
+    def tr(key):
+        return translations.get(current_language, translations["English"]).get(key, key)
 
     question = QLabel("", window)
     question.setFont(font)
@@ -86,7 +88,7 @@ def normal(window, ans9, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
             widget.deleteLater()
         print(ans)
         print(qu10)
-        marks.show_marks(window, ans, qu10, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1)
+        marks.show_marks(window, ans, qu10, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1,current_language)
 
     # Answer button callbacks for each possible answer
     # Each function checks which question is active and updates the score and correctness accordingly

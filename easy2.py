@@ -1,21 +1,9 @@
-from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5.QtCore import Qt
 import os
 import sys
 import random
-
-# --- LANGUAGE SUPPORT ---
-language_file = os.path.join(os.path.dirname(__file__), "language.txt")
-def load_language():
-    try:
-        with open(language_file, 'r', encoding='utf-8') as f:
-            lang = f.read().strip().capitalize()
-            if lang in translations:
-                return lang
-    except Exception:
-        pass
-    return "English"
+from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt
 
 translations = {
     "English": {
@@ -34,7 +22,7 @@ translations = {
         "A": "A) Γαλλία",
         "B": "B) Ισπανία",
         "C": "C) Ουκρανία",
-        "D": "D) Πολωνία"
+        "D": "D) Δανία"
     },
     "French": {
         "q1": "2. À quel pays appartient la Corse ?",
@@ -46,7 +34,7 @@ translations = {
         "D": "D) Pologne"
     }
 }
-current_language = load_language()
+current_language = "English"
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
@@ -57,11 +45,14 @@ ans = 0
 # Receives the window, previous score, and correctness of the first question
 # Sets up the second question and answer buttons
 
-def easy(window, ans1, qu1):
+def easy(window, ans1, qu1, current_language):
     global qu2, ans
-    ans += ans1  # Add previous score to current score
+    ans += ans1
     font = QFont("Calibri", 13)
-    instance = random.randint(1, 3)  # Randomly select which question to show
+    instance = random.randint(1, 3)
+
+    def tr(key):
+        return translations.get(current_language, translations["English"]).get(key, key)
 
     # Create the question label, centered horizontally
     question = QLabel("", window)
@@ -95,11 +86,11 @@ def easy(window, ans1, qu1):
             widget.deleteLater()
         print(ans)
         print(qu2)
-        easy3.easy(window, ans, qu2, qu1)
+        easy3.easy(window, ans, qu2, qu1, current_language)
 
     # Answer button callbacks for each possible answer
     # Each function checks which question is active and updates the score and correctness accordingly
-    def answer_france():
+    def answer_a():
         global qu2, ans
         if instance == 1:
             qu2 = True
@@ -112,7 +103,7 @@ def easy(window, ans1, qu1):
             qu2 = False
             next_question()
 
-    def answer_spain():
+    def answer_b():
         global qu2, ans
         if instance == 1:
             qu2 = False
@@ -124,7 +115,7 @@ def easy(window, ans1, qu1):
             qu2 = False
             next_question()
 
-    def answer_ukraine():
+    def answer_c():
         global qu2, ans
         if instance == 1:
             qu2 = False
@@ -137,7 +128,7 @@ def easy(window, ans1, qu1):
             qu2 = False
             next_question()
 
-    def answer_poland():
+    def answer_d():
         global qu2, ans
         if instance == 1:
             qu2 = False
@@ -174,27 +165,27 @@ def easy(window, ans1, qu1):
     button_a.move(250, 140)
     button_a.setFont(font)
     button_a.show()
-    button_a.clicked.connect(answer_france)
+    button_a.clicked.connect(answer_a)
 
     button_b = QPushButton(tr("B"), window)
     button_b.setFont(font)
     button_b.resize(500, 120)
     button_b.move(250, 270)
     button_b.show()
-    button_b.clicked.connect(answer_spain)
+    button_b.clicked.connect(answer_b)
 
     button_c = QPushButton(tr("C"), window)
     button_c.resize(500, 120)
     button_c.move(250, 400)
     button_c.setFont(font)
     button_c.show()
-    button_c.clicked.connect(answer_ukraine)
+    button_c.clicked.connect(answer_c)
 
     button_d = QPushButton(tr("D"), window)
     button_d.resize(500, 120)
     button_d.move(250, 530)
     button_d.setFont(font)
     button_d.show()
-    button_d.clicked.connect(answer_poland)
+    button_d.clicked.connect(answer_d)
 
     set_correct_text()

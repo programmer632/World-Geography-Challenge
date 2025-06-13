@@ -50,12 +50,14 @@ current_language = load_language()
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
-def normal(window, ans8, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
-    global qu9, ans, current_language
+def normal(window, ans8, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1, current_language):
+    global qu9, ans
     ans += ans8
     font = QFont("Calibri", 13)
     instance = random.randint(1, 3)
-    current_language = load_language()
+
+    def tr(key):
+        return translations.get(current_language, translations["English"]).get(key, key)
 
     question = QLabel("", window)
     question.setFont(font)
@@ -85,7 +87,7 @@ def normal(window, ans8, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
             widget.deleteLater()
         print(ans)
         print(qu9)
-        normal10.normal(window, ans, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1)
+        normal10.normal(window, ans, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1, current_language)
 
     # Answer button callbacks for each possible answer
     def answer_a():

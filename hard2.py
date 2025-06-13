@@ -1,21 +1,9 @@
-from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5.QtCore import Qt
 import os
 import sys
 import random
-
-# --- LANGUAGE SUPPORT ---
-language_file = os.path.join(os.path.dirname(__file__), "language.txt")
-def load_language():
-    try:
-        with open(language_file, 'r', encoding='utf-8') as f:
-            lang = f.read().strip().capitalize()
-            if lang in translations:
-                return lang
-    except Exception:
-        pass
-    return "English"
+from PyQt5.QtWidgets import QPushButton, QLabel, QWidget
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt
 
 translations = {
     "English": {
@@ -23,7 +11,7 @@ translations = {
         "q2": "2. Which country has the largest population in Africa?",
         "q3": "2. Which is the second most populous country in Africa after Nigeria?",
         "A1": "A) Luxor", "B1": "B) Cairo", "C1": "C) Abu Dhabi", "D1": "D) Rabat",
-        "A2": "A) Egypt", "B2": "B) Nigeria", "C2": "C) Ethiopia", "D2": "D) Congo",
+        "A2": "A) Egypt", "B2": "B) Ethiopia", "C2": "C) Nigeria", "D2": "D) Congo",
         "A3": "A) Egypt", "B3": "B) Ethiopia", "C3": "C) Congo", "D3": "D) South Africa"
     },
     "Greek": {
@@ -43,7 +31,7 @@ translations = {
         "A3": "A) Égypte", "B3": "B) Éthiopie", "C3": "C) Congo", "D3": "D) Afrique du Sud"
     }
 }
-current_language = load_language()
+current_language = "English"
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
@@ -65,7 +53,7 @@ def hard(window, prev_score, qu1):
     question_label = QLabel("", window)
     question_label.setFont(font)
     question_label.setWordWrap(True)  # Enable word wrap
-    question_label.setAlignment(Qt.AlignCenter)
+    question_label.setAlignment(Qt.AlignCenter)  # Center the text in the label
 
     # Set question text (translated)
     if question_variant == 1:
@@ -93,7 +81,7 @@ def hard(window, prev_score, qu1):
             widget.deleteLater()
         print(ans)
         print(qu2)
-        hard3.hard(window, ans, qu2, qu1)
+        hard3.hard(window, ans, qu2, qu1, current_language)
 
     # Answer button callbacks for each possible answer
     def answer_a():
@@ -202,28 +190,28 @@ def hard(window, prev_score, qu1):
             button_d.setText(tr("D3"))
 
     # Create answer buttons and connect them to the correct callback
-    button_a = QPushButton("A) France", window)
+    button_a = QPushButton("", window)
     button_a.resize(500, 120)
     button_a.move(250, 140)
     button_a.setFont(font)
     button_a.show()
     button_a.clicked.connect(answer_a)
 
-    button_b = QPushButton("B) Spain", window)
+    button_b = QPushButton("", window)
     button_b.setFont(font)
     button_b.resize(500, 120)
     button_b.move(250, 270)
     button_b.show()
     button_b.clicked.connect(answer_b)
 
-    button_c = QPushButton("C) Ukraine", window)
+    button_c = QPushButton("", window)
     button_c.resize(500, 120)
     button_c.move(250, 400)
     button_c.setFont(font)
     button_c.show()
     button_c.clicked.connect(answer_c)
 
-    button_d = QPushButton("D) Poland", window)
+    button_d = QPushButton("", window)
     button_d.resize(500, 120)
     button_d.move(250, 530)
     button_d.setFont(font)

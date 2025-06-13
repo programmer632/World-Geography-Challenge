@@ -50,19 +50,19 @@ current_language = load_language()
 def tr(key):
     return translations.get(current_language, translations["English"]).get(key, key)
 
-def normal(window, ans6, qu6, qu5, qu4, qu3, qu2, qu1):
-    global qu7, ans, current_language
+def normal(window, ans6, qu6, qu5, qu4, qu3, qu2, qu1, current_language):
+    global qu7, ans
     ans += ans6
     font = QFont("Calibri", 13)
     instance = random.randint(1, 3)
-    current_language = load_language()
+
+    def tr(key):
+        return translations.get(current_language, translations["English"]).get(key, key)
 
     question = QLabel("", window)
     question.setFont(font)
     question.setWordWrap(True)
     question.setAlignment(Qt.AlignCenter)
-
-    # Set the question text (multilingual)
     if instance == 1:
         question.setText(tr('q1'))
     elif instance == 2:
@@ -85,9 +85,8 @@ def normal(window, ans6, qu6, qu5, qu4, qu3, qu2, qu1):
             widget.deleteLater()
         print(ans)
         print(qu7)
-        normal8.normal(window, ans, qu7, qu6, qu5, qu4, qu3, qu2, qu1)
+        normal8.normal(window, ans, qu7, qu6, qu5, qu4, qu3, qu2, qu1, current_language)
 
-    # Answer button callbacks for each possible answer
     def answer_a():
         global qu7, ans
         if instance == 1:
@@ -139,7 +138,6 @@ def normal(window, ans6, qu6, qu5, qu4, qu3, qu2, qu1):
             qu7 = False
             next_question()
 
-    # Set the button texts according to the question instance (multilingual)
     def set_button_texts():
         if instance == 1:
             button_a.setText(tr('A1'))
@@ -157,7 +155,6 @@ def normal(window, ans6, qu6, qu5, qu4, qu3, qu2, qu1):
             button_c.setText(tr('C3'))
             button_d.setText(tr('D3'))
 
-    # Create answer buttons and connect them to the correct callback
     button_a = QPushButton("", window)
     button_a.resize(500, 120)
     button_a.move(250, 140)
