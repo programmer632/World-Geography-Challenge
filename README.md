@@ -10,6 +10,8 @@ Welcome to the **World Geography Challenge** — an interactive and educational 
 - 🤝 **Open Source**: Encourage contribution, learning, and community development.
 - 🔧 **Extensible**: Easily add your own questions or difficulty levels.
 - 🌐 **Accessible**: All code, comments, and UI text are in English for global reach.
+- 🌍 **Multilingual**: Supports English, Greek, and French for both UI and quiz content.
+- 🎵 **Customizable Music**: Choose from built-in tracks or play your own music file.
 
 ---
 
@@ -20,23 +22,29 @@ Welcome to the **World Geography Challenge** — an interactive and educational 
 - 📈 **Score Tracking**: Real-time updates to your score.
 - 🏆 **Leaderboard**: Compete with yourself or friends for high scores!
 - 🎵 **Background Music**: Choose from built-in tracks or add your own.
-- ⚙️ **Settings Menu**: Customize your experience.
+- ⚙️ **Settings Menu**: Customize your experience, including language and music selection.
 - 🧱 **Modular Code**: Clean file structure for easy maintenance and contributions.
+- 🌐 **Multilingual Support**: All quiz questions and UI elements are available in English, Greek, and French.
+- 🗂️ **Settings & Data in JSON**: User preferences and leaderboard data are stored in JSON for easy editing and portability.
 
 ---
 
 ## 🗂️ Project Structure
 
 ```
-📁 GeographyQuizApp/
-├── geograph_with_buttons_3.py        # Main launcher
-├── easy.py, easy2.py ... easy10.py   # Easy questions
-├── normal.py, ... normal10.py        # Normal questions
-├── hard.py, ... hard10.py            # Hard questions
-├── marks.py                          # Results screen & leaderboard
-├── settings.txt                      # Settings save
-├── data.json                         # Leaderboard data
-├── Project Overview.pdf              # Full project documentation
+📁 World Geography Challenge/
+├── World_Geography_Challenge.py       # Main launcher and UI logic
+├── easy.py, easy2.py ... easy10.py    # Easy questions (multilingual)
+├── normal.py, ... normal10.py         # Normal questions (multilingual)
+├── hard.py, ... hard10.py             # Hard questions (multilingual)
+├── marks.py                           # Results screen & leaderboard
+├── extra_files/
+│   ├── settings.json                  # Settings (music, language)
+│   ├── language.txt                   # Current language selection
+│   ├── *.mp3                          # Built-in music tracks
+│   └── *.ico                          # App icon
+├── data.json                          # Leaderboard data
+├── Project Overview.pdf               # Full project documentation
 ```
 
 ---
@@ -63,7 +71,7 @@ You can always download the latest version of the application without needing to
 
 - [Python 3.x](https://www.python.org/)
 - [PyQt5](https://pypi.org/project/PyQt5/) → `pip install PyQt5`
-- (Optional) [python-vlc](https://pypi.org/project/python-vlc/) for background music → `pip install python-vlc`
+- [python-vlc](https://pypi.org/project/python-vlc/) for background music → `pip install python-vlc`
 
 #### Run the Application
 
@@ -81,7 +89,7 @@ python World_Geography_Challenge.py
 ## 🧪 Example Flow
 
 - Choose your difficulty (Easy / Normal / Hard)
-- Answer the 10 multiple-choice questions
+- Answer the 10 multiple-choice questions (in your selected language)
 - See your score, correct/wrong answers
 - Check your position on the leaderboard
 - Play again or switch levels 🎮
@@ -94,9 +102,9 @@ Contributions are welcome — and beginners are encouraged!
 
 ### 🛠️ What You Can Do
 
-- Add new quiz questions or difficulty levels
+- Add new quiz questions or difficulty levels (in all supported languages)
 - Improve UI/UX (themes, animations, layout)
-- Translate to other languages
+- Translate to other languages (add to the translation dictionaries)
 - Implement new game modes (e.g., timed mode, multiplayer)
 - Add accessibility features (keyboard support, colorblind mode)
 - Write unit tests for core logic
@@ -113,8 +121,8 @@ Contributions are welcome — and beginners are encouraged!
 
 ## 🧰 Files That Store Data
 
-- `settings.txt`: Stores user preferences like music settings.
-- `skore.txt`: Keeps your most recent game score.
+- `extra_files/settings.json`: Stores user preferences like music and language settings.
+- `extra_files/language.txt`: Stores the currently selected language.
 - `data.json`: Tracks and stores leaderboard information.
 
 ---

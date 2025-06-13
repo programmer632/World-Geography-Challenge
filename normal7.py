@@ -8,25 +8,67 @@ import random
 qu7 = None
 ans = 0
 
+# --- LANGUAGE SUPPORT ---
+language_file = os.path.join(os.path.dirname(__file__), "language.txt")
+def load_language():
+    try:
+        with open(language_file, 'r', encoding='utf-8') as f:
+            lang = f.read().strip().capitalize()
+            if lang in translations:
+                return lang
+    except Exception:
+        pass
+    return "English"
+
+translations = {
+    "English": {
+        "q1": "7. What is the longest river in Asia?",
+        "q2": "7. In which American country is Machu Picchu located?",
+        "q3": "7. What is the capital city of Argentina?",
+        "A1": "A) Yangtze", "B1": "B) Ganges", "C1": "C) Mekong", "D1": "D) Ob",
+        "A2": "A) Ecuador", "B2": "B) Bolivia", "C2": "C) Peru", "D2": "D) Chile",
+        "A3": "A) Montevideo", "B3": "B) Santiago", "C3": "C) Buenos Aires", "D3": "D) Rio de Janeiro"
+    },
+    "Greek": {
+        "q1": "7. Ποιος είναι ο μεγαλύτερος ποταμός στην Ασία;",
+        "q2": "7. Σε ποια αμερικανική χώρα βρίσκεται το Μάτσου Πίτσου;",
+        "q3": "7. Ποια είναι η πρωτεύουσα της Αργεντινής;",
+        "A1": "A) Γιανγκτσέ", "B1": "B) Γάγγης", "C1": "C) Μεκόνγκ", "D1": "D) Ομπ",
+        "A2": "A) Ισημερινός", "B2": "B) Βολιβία", "C2": "C) Περού", "D2": "D) Χιλή",
+        "A3": "A) Μοντεβιδέο", "B3": "B) Σαντιάγο", "C3": "C) Μπουένος Άιρες", "D3": "D) Ρίο ντε Τζανέιρο"
+    },
+    "French": {
+        "q1": "7. Quel est le plus long fleuve d'Asie ?",
+        "q2": "7. Dans quel pays d'Amérique se trouve le Machu Picchu ?",
+        "q3": "7. Quelle est la capitale de l'Argentine ?",
+        "A1": "A) Yangtsé", "B1": "B) Gange", "C1": "C) Mékong", "D1": "D) Ob",
+        "A2": "A) Équateur", "B2": "B) Bolivie", "C2": "C) Pérou", "D2": "D) Chili",
+        "A3": "A) Montevideo", "B3": "B) Santiago", "C3": "C) Buenos Aires", "D3": "D) Rio de Janeiro"
+    }
+}
+current_language = load_language()
+def tr(key):
+    return translations.get(current_language, translations["English"]).get(key, key)
+
 def normal(window, ans6, qu6, qu5, qu4, qu3, qu2, qu1):
-    global qu7, ans
+    global qu7, ans, current_language
     ans += ans6
     font = QFont("Calibri", 13)
     instance = random.randint(1, 3)
+    current_language = load_language()
 
     question = QLabel("", window)
     question.setFont(font)
     question.setWordWrap(True)
     question.setAlignment(Qt.AlignCenter)
 
-    # Set the question text in English based on the random instance
-    # Each question is unique and tests knowledge of world geography
+    # Set the question text (multilingual)
     if instance == 1:
-        question.setText("7. What is the longest river in Asia?")
+        question.setText(tr('q1'))
     elif instance == 2:
-        question.setText("7. In which American country is Machu Picchu located?")
+        question.setText(tr('q2'))
     elif instance == 3:
-        question.setText("7. What is the capital city of Argentina?")
+        question.setText(tr('q3'))
 
     window_width = window.frameGeometry().width()
     question_width = 600
@@ -38,7 +80,6 @@ def normal(window, ans6, qu6, qu5, qu4, qu3, qu2, qu1):
     question.show()
 
     def next_question():
-        # Proceed to the next question (normal8)
         import normal8
         for widget in window.children():
             widget.deleteLater()
@@ -47,106 +88,102 @@ def normal(window, ans6, qu6, qu5, qu4, qu3, qu2, qu1):
         normal8.normal(window, ans, qu7, qu6, qu5, qu4, qu3, qu2, qu1)
 
     # Answer button callbacks for each possible answer
-    # Each function checks which question is active and updates the score and correctness accordingly
-    # The correct answer for each question is marked in the set_button_texts function
     def answer_a():
         global qu7, ans
         if instance == 1:
-            qu7 = True   # Yangtze is correct
+            qu7 = True
             ans += 2
             next_question()
         elif instance == 2:
-            qu7 = False  # Ecuador is not correct
+            qu7 = False
             next_question()
         elif instance == 3:
-            qu7 = False  # Montevideo is not correct
+            qu7 = False
             next_question()
 
     def answer_b():
         global qu7, ans
         if instance == 1:
-            qu7 = False  # Ganges is not correct
+            qu7 = False
             next_question()
         elif instance == 2:
-            qu7 = False  # Bolivia is not correct
+            qu7 = False
             next_question()
         elif instance == 3:
-            qu7 = False  # Santiago is not correct
+            qu7 = False
             next_question()
 
     def answer_c():
         global qu7, ans
         if instance == 1:
-            qu7 = False  # Mekong is not correct
+            qu7 = False
             next_question()
         elif instance == 2:
-            qu7 = True   # Peru is correct
+            qu7 = True
             ans += 2
             next_question()
         elif instance == 3:
-            qu7 = True   # Buenos Aires is correct
+            qu7 = True
             ans += 2
             next_question()
 
     def answer_d():
         global qu7, ans
         if instance == 1:
-            qu7 = False  # Ob is not correct
+            qu7 = False
             next_question()
         elif instance == 2:
-            qu7 = False  # Chile is not correct
+            qu7 = False
             next_question()
         elif instance == 3:
-            qu7 = False  # Rio de Janeiro is not correct
+            qu7 = False
             next_question()
 
-    # Set the button texts in English according to the question instance
-    # The correct answer is marked with a comment for clarity
+    # Set the button texts according to the question instance (multilingual)
     def set_button_texts():
         if instance == 1:
-            button_a.setText("A) Yangtze")  # correct
-            button_b.setText("B) Ganges")
-            button_c.setText("C) Mekong")
-            button_d.setText("D) Ob")
+            button_a.setText(tr('A1'))
+            button_b.setText(tr('B1'))
+            button_c.setText(tr('C1'))
+            button_d.setText(tr('D1'))
         elif instance == 2:
-            button_a.setText("A) Ecuador")
-            button_b.setText("B) Bolivia")
-            button_c.setText("C) Peru")  # correct
-            button_d.setText("D) Chile")
+            button_a.setText(tr('A2'))
+            button_b.setText(tr('B2'))
+            button_c.setText(tr('C2'))
+            button_d.setText(tr('D2'))
         elif instance == 3:
-            button_a.setText("A) Montevideo")
-            button_b.setText("B) Santiago")
-            button_c.setText("C) Buenos Aires")  # correct
-            button_d.setText("D) Rio de Janeiro")
+            button_a.setText(tr('A3'))
+            button_b.setText(tr('B3'))
+            button_c.setText(tr('C3'))
+            button_d.setText(tr('D3'))
 
     # Create answer buttons and connect them to the correct callback
-    # All buttons are styled and positioned consistently
-    button_a = QPushButton("A)", window)
+    button_a = QPushButton("", window)
     button_a.resize(500, 120)
     button_a.move(250, 140)
     button_a.setFont(font)
     button_a.show()
     button_a.clicked.connect(answer_a)
 
-    button_b = QPushButton("B)", window)
+    button_b = QPushButton("", window)
     button_b.setFont(font)
     button_b.resize(500, 120)
     button_b.move(250, 270)
     button_b.show()
     button_b.clicked.connect(answer_b)
 
-    button_c = QPushButton("C)", window)
+    button_c = QPushButton("", window)
     button_c.resize(500, 120)
     button_c.move(250, 400)
     button_c.setFont(font)
     button_c.show()
     button_c.clicked.connect(answer_c)
 
-    button_d = QPushButton("D)", window)
+    button_d = QPushButton("", window)
     button_d.resize(500, 120)
     button_d.move(250, 530)
     button_d.setFont(font)
     button_d.show()
     button_d.clicked.connect(answer_d)
 
-    set_button_texts()  # Set the answer texts for the current question
+    set_button_texts()

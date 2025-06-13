@@ -5,6 +5,48 @@ import os
 import sys
 import random
 
+# --- LANGUAGE SUPPORT ---
+language_file = os.path.join(os.path.dirname(__file__), "language.txt")
+def load_language():
+    try:
+        with open(language_file, 'r', encoding='utf-8') as f:
+            lang = f.read().strip().capitalize()
+            if lang in translations:
+                return lang
+    except Exception:
+        pass
+    return "English"
+
+translations = {
+    "English": {
+        "q1": "3. Which European country is completely\nsurrounded by Italy?",
+        "q2": "3. Which country has Budapest as its capital city?",
+        "q3": "3. Which country is crossed by the Danube river?",
+        "A1": "A) San Marino", "B1": "B) Italy", "C1": "C) Vatican City", "D1": "D) Monaco",
+        "A2": "A) Slovakia", "B2": "B) Hungary", "C2": "C) Romania", "D2": "D) Serbia",
+        "A3": "A) Spain", "B3": "B) Germany", "C3": "C) France", "D3": "D) Portugal"
+    },
+    "Greek": {
+        "q1": "3. Ποια ευρωπαϊκή χώρα περιβάλλεται εξ ολοκλήρου από την Ιταλία;",
+        "q2": "3. Ποια χώρα έχει πρωτεύουσα τη Βουδαπέστη;",
+        "q3": "3. Ποια χώρα διασχίζεται από τον ποταμό Δούναβη;",
+        "A1": "A) Άγιος Μαρίνος", "B1": "B) Ιταλία", "C1": "C) Βατικανό", "D1": "D) Μονακό",
+        "A2": "A) Σλοβακία", "B2": "B) Ουγγαρία", "C2": "C) Ρουμανία", "D2": "D) Σερβία",
+        "A3": "A) Ισπανία", "B3": "B) Γερμανία", "C3": "C) Γαλλία", "D3": "D) Πορτογαλία"
+    },
+    "French": {
+        "q1": "3. Quel pays européen est entièrement entouré par l'Italie ?",
+        "q2": "3. Quel pays a Budapest pour capitale ?",
+        "q3": "3. Quel pays est traversé par le Danube ?",
+        "A1": "A) Saint-Marin", "B1": "B) Italie", "C1": "C) Vatican", "D1": "D) Monaco",
+        "A2": "A) Slovaquie", "B2": "B) Hongrie", "C2": "C) Roumanie", "D2": "D) Serbie",
+        "A3": "A) Espagne", "B3": "B) Allemagne", "C3": "C) France", "D3": "D) Portugal"
+    }
+}
+current_language = load_language()
+def tr(key):
+    return translations.get(current_language, translations["English"]).get(key, key)
+
 qu3 = None
 ans = 0
 
@@ -23,14 +65,13 @@ def easy(window, ans2, qu2, qu1):
     question.setFont(font)
     question.setAlignment(Qt.AlignCenter)
 
-    # Set the question text based on the random variant (all in English)
+    # Set the question text based on the random variant (translated)
     if instance == 1:
-        question.setText("""3. Which European country is completely
-surrounded by Italy?""")
+        question.setText(tr("q1"))
     elif instance == 2:
-        question.setText("3. Which country has Budapest as its capital city?")
+        question.setText(tr("q2"))
     elif instance == 3:
-        question.setText("3. Which country is crossed by the Danube river?")
+        question.setText(tr("q3"))
 
     # Calculate position to center the label horizontally and place it near the top
     window_width = window.frameGeometry().width()
@@ -106,51 +147,31 @@ surrounded by Italy?""")
             qu3 = False
             next_question()
 
-    # Set the button texts according to the question instance (all in English)
-    def set_correct_text():
-        if instance == 1:
-            dania.setText("A) San Marino")
-            kroatia.setText("B) Italy")
-            norway.setText("C) Vatican City")
-            lichtenstain.setText("D) Monaco")
-        elif instance == 2:
-            dania.setText("A) Slovakia")
-            kroatia.setText("B) Hungary")
-            norway.setText("C) Romania")
-            lichtenstain.setText("D) Serbia")
-        elif instance == 3:
-            dania.setText("A) Spain")
-            kroatia.setText("B) Germany")
-            norway.setText("C) France")
-            lichtenstain.setText("D) Portugal")
-
-    # Create answer buttons and connect them to the correct callback
-    dania = QPushButton("A) Denmark", window)
+    # Create answer buttons with translated text and connect them to the correct callback
+    dania = QPushButton(tr(f"A{instance}"), window)
     dania.resize(500, 120)
     dania.move(250, 140)
     dania.setFont(font)
     dania.show()
     dania.clicked.connect(answer_dania)
 
-    kroatia = QPushButton("B) Croatia", window)
+    kroatia = QPushButton(tr(f"B{instance}"), window)
     kroatia.setFont(font)
     kroatia.resize(500, 120)
     kroatia.move(250, 270)
     kroatia.show()
     kroatia.clicked.connect(answer_kroatia)
 
-    norway = QPushButton("C) Norway", window)
+    norway = QPushButton(tr(f"C{instance}"), window)
     norway.resize(500, 120)
     norway.move(250, 400)
     norway.setFont(font)
     norway.show()
     norway.clicked.connect(answer_norway)
 
-    lichtenstain = QPushButton("D) Liechtenstein", window)
+    lichtenstain = QPushButton(tr(f"D{instance}"), window)
     lichtenstain.resize(500, 120)
     lichtenstain.move(250, 530)
     lichtenstain.setFont(font)
     lichtenstain.show()
     lichtenstain.clicked.connect(answer_lichtenstain)
-
-    set_correct_text()

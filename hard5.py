@@ -5,35 +5,71 @@ import os
 import sys
 import random
 
-# Variables for score and correctness of question 5
-qu5 = None  # Whether question 5 was answered correctly
-ans = 0     # User's score for the hard level
+qu5 = None
+ans = 0
 
-# Main function for the fifth 'Hard' quiz question
-# Receives the window, previous score, and correctness of previous questions
-# Sets up the question and answer buttons
+# --- LANGUAGE SUPPORT ---
+language_file = os.path.join(os.path.dirname(__file__), "language.txt")
+def load_language():
+    try:
+        with open(language_file, 'r', encoding='utf-8') as f:
+            lang = f.read().strip().capitalize()
+            if lang in translations:
+                return lang
+    except Exception:
+        pass
+    return "English"
+
+translations = {
+    "English": {
+        "q1": "5. What is the highest mountain in Africa?",
+        "q2": "5. What is the capital of Kenya?",
+        "q3": "5. Which of the following countries borders Egypt?",
+        "A1": "A) Kilimanjaro", "B1": "B) Alma", "C1": "C) Makaron", "D1": "D) Everest",
+        "A2": "A) Kimbo", "B2": "B) Nairobi", "C2": "C) Lusaka", "D2": "D) Dubai",
+        "A3": "A) Sudan", "B3": "B) Morocco", "C3": "C) Nigeria", "D3": "D) Somalia"
+    },
+    "Greek": {
+        "q1": "5. Ποιο είναι το ψηλότερο βουνό στην Αφρική;",
+        "q2": "5. Ποια είναι η πρωτεύουσα της Κένυας;",
+        "q3": "5. Ποια από τις παρακάτω χώρες συνορεύει με την Αίγυπτο;",
+        "A1": "A) Κιλιμάντζαρο", "B1": "B) Άλμα", "C1": "C) Μακαρόν", "D1": "D) Έβερεστ",
+        "A2": "A) Κίμπο", "B2": "B) Ναϊρόμπι", "C2": "C) Λουσάκα", "D2": "D) Ντουμπάι",
+        "A3": "A) Σουδάν", "B3": "B) Μαρόκο", "C3": "C) Νιγηρία", "D3": "D) Σομαλία"
+    },
+    "French": {
+        "q1": "5. Quelle est la plus haute montagne d'Afrique ?",
+        "q2": "5. Quelle est la capitale du Kenya ?",
+        "q3": "5. Lequel des pays suivants est limitrophe de l'Égypte ?",
+        "A1": "A) Kilimandjaro", "B1": "B) Alma", "C1": "C) Makaron", "D1": "D) Everest",
+        "A2": "A) Kimbo", "B2": "B) Nairobi", "C2": "C) Lusaka", "D2": "D) Dubaï",
+        "A3": "A) Soudan", "B3": "B) Maroc", "C3": "C) Nigéria", "D3": "D) Somalie"
+    }
+}
+current_language = load_language()
+def tr(key):
+    return translations.get(current_language, translations["English"]).get(key, key)
 
 def hard(window, prev_score, qu4, qu3, qu2, qu1):
-    global qu5, ans
-    ans += prev_score  # Add previous score to current score
+    global qu5, ans, current_language
+    ans += prev_score
     font = QFont("Calibri", 13)
-    question_variant = random.randint(1, 3)  # Randomly select question
+    instance = random.randint(1, 3)
+    current_language = load_language()
 
-    # Create the question label, centered
     question_label = QLabel("", window)
     question_label.setFont(font)
-    question_label.setWordWrap(True)  # Enable word wrap
+    question_label.setWordWrap(True)
     question_label.setAlignment(Qt.AlignCenter)
 
-    # Set question text in English
-    if question_variant == 1:
-        question_label.setText('''5. What is the highest mountain in Africa?''')
-    elif question_variant == 2:
-        question_label.setText('''5. What is the capital of Kenya?''')
-    elif question_variant == 3:
-        question_label.setText('''5. Which of the following countries borders Egypt?''')
+    # Set question text (multilingual)
+    if instance == 1:
+        question_label.setText(tr('q1'))
+    elif instance == 2:
+        question_label.setText(tr('q2'))
+    elif instance == 3:
+        question_label.setText(tr('q3'))
 
-    # Calculate position for the question label
     window_width = window.frameGeometry().width()
     question_width = 600
     question_height = 100
@@ -43,10 +79,8 @@ def hard(window, prev_score, qu4, qu3, qu2, qu1):
     question_label.setStyleSheet("font-size: 20px; font-weight: bold;")
     question_label.show()
 
-    # Function to proceed to the next question (calls hard6.hard)
     def next_question():
         import hard6
-        # Remove all widgets before the next question
         for widget in window.children():
             widget.deleteLater()
         print(ans)
@@ -56,135 +90,100 @@ def hard(window, prev_score, qu4, qu3, qu2, qu1):
     # Answer button callbacks for each possible answer
     def answer_a():
         global qu5, ans
-        if question_variant == 1:
+        if instance == 1:
             qu5 = True
             ans += 2
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 2:
+            next_question()
+        elif instance == 2:
             qu5 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 3:
+            next_question()
+        elif instance == 3:
             qu5 = True
             ans += 2
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
+            next_question()
 
     def answer_b():
         global qu5, ans
-        if question_variant == 1:
+        if instance == 1:
             qu5 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 2:
+            next_question()
+        elif instance == 2:
             qu5 = True
             ans += 2
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 3:
+            next_question()
+        elif instance == 3:
             qu5 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
+            next_question()
 
     def answer_c():
         global qu5, ans
-        if question_variant == 1:
+        if instance == 1:
             qu5 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 2:
+            next_question()
+        elif instance == 2:
             qu5 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 3:
+            next_question()
+        elif instance == 3:
             qu5 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
+            next_question()
 
     def answer_d():
         global qu5, ans
-        if question_variant == 1:
+        if instance == 1:
             qu5 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 2:
+            next_question()
+        elif instance == 2:
             qu5 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 3:
+            next_question()
+        elif instance == 3:
             qu5 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
+            next_question()
 
-    # Set button texts in English according to the question
+    # Set button texts according to the question (multilingual)
     def set_correct_text():
-        if question_variant == 1:
-            button_a.setText("A) Kilimanjaro")
-            button_b.setText("B) Alma")
-            button_c.setText("C) Makaron")
-            button_d.setText("D) Everest")
-        if question_variant == 2:
-            button_a.setText("A) Kimbo")
-            button_b.setText("B) Nairobi")
-            button_c.setText("C) Lusaka")
-            button_d.setText("D) Dubai")
-        if question_variant == 3:
-            button_a.setText("A) Sudan")
-            button_b.setText("B) Morocco")
-            button_c.setText("C) Nigeria")
-            button_d.setText("D) Somalia")
+        if instance == 1:
+            button_a.setText(tr('A1'))
+            button_b.setText(tr('B1'))
+            button_c.setText(tr('C1'))
+            button_d.setText(tr('D1'))
+        elif instance == 2:
+            button_a.setText(tr('A2'))
+            button_b.setText(tr('B2'))
+            button_c.setText(tr('C2'))
+            button_d.setText(tr('D2'))
+        elif instance == 3:
+            button_a.setText(tr('A3'))
+            button_b.setText(tr('B3'))
+            button_c.setText(tr('C3'))
+            button_d.setText(tr('D3'))
 
     # Create answer buttons and connect them to the correct callback
-    button_a = QPushButton("A) Denmark", window)
+    button_a = QPushButton("", window)
     button_a.resize(500, 120)
     button_a.move(250, 140)
     button_a.setFont(font)
     button_a.show()
     button_a.clicked.connect(answer_a)
 
-    button_b = QPushButton("B) Croatia", window)
+    button_b = QPushButton("", window)
     button_b.setFont(font)
     button_b.resize(500, 120)
     button_b.move(250, 270)
     button_b.show()
     button_b.clicked.connect(answer_b)
 
-    button_c = QPushButton("C) Norway", window)
+    button_c = QPushButton("", window)
     button_c.resize(500, 120)
     button_c.move(250, 400)
     button_c.setFont(font)
     button_c.show()
     button_c.clicked.connect(answer_c)
 
-    button_d = QPushButton("D) Liechtenstein", window)
+    button_d = QPushButton("", window)
     button_d.resize(500, 120)
     button_d.move(250, 530)
     button_d.setFont(font)
     button_d.show()
     button_d.clicked.connect(answer_d)
+
     set_correct_text()

@@ -5,6 +5,48 @@ import os
 import sys
 import random
 
+# --- LANGUAGE SUPPORT ---
+language_file = os.path.join(os.path.dirname(__file__), "language.txt")
+def load_language():
+    try:
+        with open(language_file, 'r', encoding='utf-8') as f:
+            lang = f.read().strip().capitalize()
+            if lang in translations:
+                return lang
+    except Exception:
+        pass
+    return "English"
+
+translations = {
+    "English": {
+        "q1": "10. What is the currency of Sweden?",
+        "q2": "10. In which country is Ben Nevis, \nthe highest peak of the Cambrian Mountains, located?",
+        "q3": "10. Which country has the most islands in Europe?",
+        "A1": "A) Euro", "B1": "B) Krona", "C1": "C) Franc", "D1": "D) Pound",
+        "A2": "A) Ireland", "B2": "B) England", "C2": "C) Scotland", "D2": "D) Wales",
+        "A3": "A) Italy", "B3": "B) Greece", "C3": "C) Norway", "D3": "D) Sweden"
+    },
+    "Greek": {
+        "q1": "10. Ποιο είναι το νόμισμα της Σουηδίας;",
+        "q2": "10. Σε ποια χώρα βρίσκεται το Ben Nevis, \nη ψηλότερη κορυφή των Καμβρίων Ορέων;",
+        "q3": "10. Ποια χώρα έχει τα περισσότερα νησιά στην Ευρώπη;",
+        "A1": "A) Ευρώ", "B1": "B) Κορόνα", "C1": "C) Φράγκο", "D1": "D) Λίρα",
+        "A2": "A) Ιρλανδία", "B2": "B) Αγγλία", "C2": "C) Σκωτία", "D2": "D) Ουαλία",
+        "A3": "A) Ιταλία", "B3": "B) Ελλάδα", "C3": "C) Νορβηγία", "D3": "D) Σουηδία"
+    },
+    "French": {
+        "q1": "10. Quelle est la monnaie de la Suède ?",
+        "q2": "10. Dans quel pays se trouve le Ben Nevis, \nle plus haut sommet des monts Cambriens ?",
+        "q3": "10. Quel pays possède le plus d'îles en Europe ?",
+        "A1": "A) Euro", "B1": "B) Couronne", "C1": "C) Franc", "D1": "D) Livre",
+        "A2": "A) Irlande", "B2": "B) Angleterre", "C2": "C) Écosse", "D2": "D) Pays de Galles",
+        "A3": "A) Italie", "B3": "B) Grèce", "C3": "C) Norvège", "D3": "D) Suède"
+    }
+}
+current_language = load_language()
+def tr(key):
+    return translations.get(current_language, translations["English"]).get(key, key)
+
 qu10 = None
 ans = 0
 
@@ -23,14 +65,13 @@ def easy(window, ans9, qu9, qu8, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
     question.setFont(font)
     question.setAlignment(Qt.AlignCenter)
 
-    # Set the question text based on the random variant (all in English)
+    # Set the question text based on the random variant (translated)
     if instance == 1:
-        question.setText('''10. What is the currency of Sweden?''')
+        question.setText(tr("q1"))
     elif instance == 2:
-        question.setText('''10. In which country is Ben Nevis, 
-the highest peak of the Cambrian Mountains, located?''')
+        question.setText(tr("q2"))
     elif instance == 3:
-        question.setText('''10. Which country has the most islands in Europe?''')
+        question.setText(tr("q3"))
 
     # Calculate position to center the label horizontally and place it near the top
     window_width = window.frameGeometry().width()
@@ -105,50 +146,31 @@ the highest peak of the Cambrian Mountains, located?''')
             ans += 2
             next_question()
 
-    # Set the button texts according to the question instance (all in English)
-    def set_correct_text():
-        if instance == 1:
-            dania.setText("A) Euro")
-            kroatia.setText("B) Krona")
-            norway.setText("C) Franc")
-            poland.setText("D) Pound")
-        if instance == 2:
-            dania.setText("A) Ireland")
-            kroatia.setText("B) England")
-            norway.setText("C) Scotland")
-            poland.setText("D) Wales")
-        if instance == 3:
-            dania.setText("A) Italy")
-            kroatia.setText("B) Greece")
-            norway.setText("C) Norway")
-            poland.setText("D) Sweden")
-
-    # Create answer buttons and connect them to the correct callback
-    dania = QPushButton("A) Denmark", window)
+    # Create answer buttons with translated text and connect them to the correct callback
+    dania = QPushButton(tr(f"A{instance}"), window)
     dania.resize(500, 120)
     dania.move(250, 140)
     dania.setFont(font)
     dania.show()
     dania.clicked.connect(answer_dania)
 
-    kroatia = QPushButton("B) Croatia", window)
+    kroatia = QPushButton(tr(f"B{instance}"), window)
     kroatia.setFont(font)
     kroatia.resize(500, 120)
     kroatia.move(250, 270)
     kroatia.show()
     kroatia.clicked.connect(answer_kroatia)
 
-    norway = QPushButton("C) Norway", window)
+    norway = QPushButton(tr(f"C{instance}"), window)
     norway.resize(500, 120)
     norway.move(250, 400)
     norway.setFont(font)
     norway.show()
     norway.clicked.connect(answer_norway)
 
-    poland = QPushButton("D) Liechtenstein", window)
+    poland = QPushButton(tr(f"D{instance}"), window)
     poland.resize(500, 120)
     poland.move(250, 530)
     poland.setFont(font)
     poland.show()
     poland.clicked.connect(answer_lichtenstain)
-    set_correct_text()

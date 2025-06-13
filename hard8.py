@@ -9,15 +9,58 @@ import random
 qu8 = None  # Whether question 8 was answered correctly
 ans = 0     # User's score for the hard level
 
+# --- LANGUAGE SUPPORT ---
+language_file = os.path.join(os.path.dirname(__file__), "language.txt")
+def load_language():
+    try:
+        with open(language_file, 'r', encoding='utf-8') as f:
+            lang = f.read().strip().capitalize()
+            if lang in translations:
+                return lang
+    except Exception:
+        pass
+    return "English"
+
+translations = {
+    "English": {
+        "q1": "8. Which country has a black five-pointed star on its flag, placed on a red background?",
+        "q2": "8. Which country borders South Africa but is landlocked?",
+        "q3": "8. What is the capital of Ivory Coast?",
+        "A1": "A) Cameroon", "B1": "B) Morocco", "C1": "C) Mali", "D1": "D) Senegal",
+        "A2": "A) Lesotho", "B2": "B) Namibia", "C2": "C) Mozambique", "D2": "D) Angola",
+        "A3": "A) Monrovia", "B3": "B) Conakry", "C3": "C) Bamako", "D3": "D) Yamoussoukro"
+    },
+    "Greek": {
+        "q1": "8. Ποια χώρα έχει μια μαύρη πεντάκτινη αστέρι στη σημαία της, τοποθετημένη σε κόκκινο φόντο;",
+        "q2": "8. Ποια χώρα συνορεύει με τη Νότια Αφρική αλλά δεν έχει θάλασσα;",
+        "q3": "8. Ποια είναι η πρωτεύουσα της Ακτής Ελεφαντοστού;",
+        "A1": "A) Καμερούν", "B1": "B) Μαρόκο", "C1": "C) Μάλι", "D1": "D) Σενεγάλη",
+        "A2": "A) Λεσότο", "B2": "B) Ναμίμπια", "C2": "C) Μοζαμβίκη", "D2": "D) Αγκόλα",
+        "A3": "A) Μονρόβια", "B3": "B) Κονακρί", "C3": "C) Μπαμάκο", "D3": "D) Γιαμουσουκρό"
+    },
+    "French": {
+        "q1": "8. Quel pays a une étoile noire à cinq branches sur son drapeau, placée sur un fond rouge ?",
+        "q2": "8. Quel pays borde l'Afrique du Sud mais est enclavé ?",
+        "q3": "8. Quelle est la capitale de la Côte d'Ivoire ?",
+        "A1": "A) Cameroun", "B1": "B) Maroc", "C1": "C) Mali", "D1": "D) Sénégal",
+        "A2": "A) Lesotho", "B2": "B) Namibie", "C2": "C) Mozambique", "D2": "D) Angola",
+        "A3": "A) Monrovia", "B3": "B) Conakry", "C3": "C) Bamako", "D3": "D) Yamoussoukro"
+    }
+}
+current_language = load_language()
+def tr(key):
+    return translations.get(current_language, translations["English"]).get(key, key)
+
 # Main function for the eighth 'Hard' quiz question
 # Receives the window, previous score, and correctness of previous questions
 # Sets up the question and answer buttons
 
 def hard(window, prev_score, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
-    global qu8, ans
+    global qu8, ans, current_language
     ans += prev_score  # Add previous score to current score
     font = QFont("Calibri", 13)
-    question_variant = random.randint(1, 3)  # Randomly select question
+    instance = random.randint(1, 3)
+    current_language = load_language()
 
     # Create the question label, centered
     question_label = QLabel("", window)
@@ -25,13 +68,13 @@ def hard(window, prev_score, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
     question_label.setWordWrap(True)  # Enable word wrap
     question_label.setAlignment(Qt.AlignCenter)
 
-    # Set question text in English
-    if question_variant == 1:
-        question_label.setText('''8. Which country has a black five-pointed star on its flag, placed on a red background?''')
-    elif question_variant == 2:
-        question_label.setText('''8. Which country borders South Africa but is landlocked?''')
-    elif question_variant == 3:
-        question_label.setText('''8. What is the capital of Ivory Coast?''')
+    # Set question text (multilingual)
+    if instance == 1:
+        question_label.setText(tr('q1'))
+    elif instance == 2:
+        question_label.setText(tr('q2'))
+    elif instance == 3:
+        question_label.setText(tr('q3'))
 
     # Calculate position for the question label
     window_width = window.frameGeometry().width()
@@ -56,135 +99,100 @@ def hard(window, prev_score, qu7, qu6, qu5, qu4, qu3, qu2, qu1):
     # Answer button callbacks for each possible answer
     def answer_a():
         global qu8, ans
-        if question_variant == 1:
+        if instance == 1:
             qu8 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 2:
+            next_question()
+        elif instance == 2:
             qu8 = True
             ans += 2
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 3:
+            next_question()
+        elif instance == 3:
             qu8 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
+            next_question()
 
     def answer_b():
         global qu8, ans
-        if question_variant == 1:
+        if instance == 1:
             qu8 = True
             ans += 2
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 2:
+            next_question()
+        elif instance == 2:
             qu8 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 3:
+            next_question()
+        elif instance == 3:
             qu8 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
+            next_question()
 
     def answer_c():
         global qu8, ans
-        if question_variant == 1:
+        if instance == 1:
             qu8 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 2:
+            next_question()
+        elif instance == 2:
             qu8 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 3:
+            next_question()
+        elif instance == 3:
             qu8 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
+            next_question()
 
     def answer_d():
         global qu8, ans
-        if question_variant == 1:
+        if instance == 1:
             qu8 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 2:
+            next_question()
+        elif instance == 2:
             qu8 = False
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
-        elif question_variant == 3:
+            next_question()
+        elif instance == 3:
             qu8 = True
             ans += 2
-            try:
-                next_question()
-            except Exception as e:
-                print(f"Error: {e}")
+            next_question()
 
-    # Set button texts in English according to the question
+    # Set button texts according to the question (multilingual)
     def set_correct_text():
-        if question_variant == 1:
-            button_a.setText("A) Cameroon")
-            button_b.setText("B) Morocco")
-            button_c.setText("C) Mali")
-            button_d.setText("D) Senegal")
-        if question_variant == 2:
-            button_a.setText("A) Lesotho")
-            button_b.setText("B) Namibia")
-            button_c.setText("C) Mozambique")
-            button_d.setText("D) Angola")
-        if question_variant == 3:
-            button_a.setText("A) Monrovia")
-            button_b.setText("B) Conakry")
-            button_c.setText("C) Bamako")
-            button_d.setText("D) Yamoussoukro")
+        if instance == 1:
+            button_a.setText(tr('A1'))
+            button_b.setText(tr('B1'))
+            button_c.setText(tr('C1'))
+            button_d.setText(tr('D1'))
+        elif instance == 2:
+            button_a.setText(tr('A2'))
+            button_b.setText(tr('B2'))
+            button_c.setText(tr('C2'))
+            button_d.setText(tr('D2'))
+        elif instance == 3:
+            button_a.setText(tr('A3'))
+            button_b.setText(tr('B3'))
+            button_c.setText(tr('C3'))
+            button_d.setText(tr('D3'))
 
     # Create answer buttons and connect them to the correct callback
-    button_a = QPushButton("A) Denmark", window)
+    button_a = QPushButton("", window)
     button_a.resize(500, 120)
     button_a.move(250, 140)
     button_a.setFont(font)
     button_a.show()
     button_a.clicked.connect(answer_a)
 
-    button_b = QPushButton("B) Croatia", window)
+    button_b = QPushButton("", window)
     button_b.setFont(font)
     button_b.resize(500, 120)
     button_b.move(250, 270)
     button_b.show()
     button_b.clicked.connect(answer_b)
 
-    button_c = QPushButton("C) Norway", window)
+    button_c = QPushButton("", window)
     button_c.resize(500, 120)
     button_c.move(250, 400)
     button_c.setFont(font)
     button_c.show()
     button_c.clicked.connect(answer_c)
 
-    button_d = QPushButton("D) Liechtenstein", window)
+    button_d = QPushButton("", window)
     button_d.resize(500, 120)
     button_d.move(250, 530)
     button_d.setFont(font)
     button_d.show()
     button_d.clicked.connect(answer_d)
+
     set_correct_text()

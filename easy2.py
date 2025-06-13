@@ -5,6 +5,51 @@ import os
 import sys
 import random
 
+# --- LANGUAGE SUPPORT ---
+language_file = os.path.join(os.path.dirname(__file__), "language.txt")
+def load_language():
+    try:
+        with open(language_file, 'r', encoding='utf-8') as f:
+            lang = f.read().strip().capitalize()
+            if lang in translations:
+                return lang
+    except Exception:
+        pass
+    return "English"
+
+translations = {
+    "English": {
+        "q1": "2. To which country does Corsica belong?",
+        "q2": "2. Which is the largest country by area\nlocated entirely in Europe?",
+        "q3": "2. To which country do the Faroe Islands belong?",
+        "A": "A) France",
+        "B": "B) Spain",
+        "C": "C) Ukraine",
+        "D": "D) Poland"
+    },
+    "Greek": {
+        "q1": "2. Σε ποια χώρα ανήκει η Κορσική;",
+        "q2": "2. Ποια είναι η μεγαλύτερη χώρα σε έκταση\nπου βρίσκεται εξ ολοκλήρου στην Ευρώπη;",
+        "q3": "2. Σε ποια χώρα ανήκουν τα Νησιά Φερόες;",
+        "A": "A) Γαλλία",
+        "B": "B) Ισπανία",
+        "C": "C) Ουκρανία",
+        "D": "D) Πολωνία"
+    },
+    "French": {
+        "q1": "2. À quel pays appartient la Corse ?",
+        "q2": "2. Quel est le plus grand pays entièrement situé en Europe ?",
+        "q3": "2. À quel pays appartiennent les îles Féroé ?",
+        "A": "A) France",
+        "B": "B) Espagne",
+        "C": "C) Ukraine",
+        "D": "D) Pologne"
+    }
+}
+current_language = load_language()
+def tr(key):
+    return translations.get(current_language, translations["English"]).get(key, key)
+
 qu2 = None
 ans = 0
 
@@ -23,14 +68,13 @@ def easy(window, ans1, qu1):
     question.setFont(font)
     question.setAlignment(Qt.AlignCenter)
 
-    # Set the question text based on the random variant (all in English)
+    # Set the question text based on the random variant (translated)
     if instance == 1:
-        question.setText('''2. To which country does Corsica belong?''')
+        question.setText(tr("q1"))
     elif instance == 2:
-        question.setText('''2. Which is the largest country by area
-located entirely in Europe?''')
+        question.setText(tr("q2"))
     elif instance == 3:
-        question.setText('''2. To which country do the Faroe Islands belong?''')
+        question.setText(tr("q3"))
 
     # Calculate position to center the label horizontally and place it near the top
     window_width = window.frameGeometry().width()
@@ -109,44 +153,44 @@ located entirely in Europe?''')
     # Set the button texts according to the question instance (all in English)
     def set_correct_text():
         if instance == 1:
-            button_a.setText("A) France")
-            button_b.setText("B) Spain")
-            button_c.setText("C) Ukraine")
-            button_d.setText("D) Poland")
+            button_a.setText(tr("A"))
+            button_b.setText(tr("B"))
+            button_c.setText(tr("C"))
+            button_d.setText(tr("D"))
         elif instance == 2:
-            button_a.setText("A) France")
-            button_b.setText("B) Spain")
-            button_c.setText("C) Ukraine")
-            button_d.setText("D) Poland")
+            button_a.setText(tr("A"))
+            button_b.setText(tr("B"))
+            button_c.setText(tr("C"))
+            button_d.setText(tr("D"))
         elif instance == 3:
-            button_a.setText("A) France")
-            button_b.setText("B) Spain")
-            button_c.setText("C) Ukraine")
-            button_d.setText("D) Poland")
+            button_a.setText(tr("A"))
+            button_b.setText(tr("B"))
+            button_c.setText(tr("C"))
+            button_d.setText(tr("D"))
 
-    # Create answer buttons and connect them to the correct callback
-    button_a = QPushButton("A) France", window)
+    # Create answer buttons with translated text and connect them to the correct callback
+    button_a = QPushButton(tr("A"), window)
     button_a.resize(500, 120)
     button_a.move(250, 140)
     button_a.setFont(font)
     button_a.show()
     button_a.clicked.connect(answer_france)
 
-    button_b = QPushButton("B) Spain", window)
+    button_b = QPushButton(tr("B"), window)
     button_b.setFont(font)
     button_b.resize(500, 120)
     button_b.move(250, 270)
     button_b.show()
     button_b.clicked.connect(answer_spain)
 
-    button_c = QPushButton("C) Ukraine", window)
+    button_c = QPushButton(tr("C"), window)
     button_c.resize(500, 120)
     button_c.move(250, 400)
     button_c.setFont(font)
     button_c.show()
     button_c.clicked.connect(answer_ukraine)
 
-    button_d = QPushButton("D) Poland", window)
+    button_d = QPushButton(tr("D"), window)
     button_d.resize(500, 120)
     button_d.move(250, 530)
     button_d.setFont(font)

@@ -5,6 +5,48 @@ import os
 import sys
 import random
 
+# --- LANGUAGE SUPPORT ---
+language_file = os.path.join(os.path.dirname(__file__), "language.txt")
+def load_language():
+    try:
+        with open(language_file, 'r', encoding='utf-8') as f:
+            lang = f.read().strip().capitalize()
+            if lang in translations:
+                return lang
+    except Exception:
+        pass
+    return "English"
+
+translations = {
+    "English": {
+        "q1": "7. In which country is the region of Tuscany located?",
+        "q2": "7. What is the largest lake in Europe?",
+        "q3": "7. Which country borders Latvia?",
+        "A1": "A) France", "B1": "B) Italy", "C1": "C) Greece", "D1": "D) Spain",
+        "A2": "A) Balaton", "B2": "B) Vänern", "C2": "C) Ladoga", "D2": "D) Como",
+        "A3": "A) Lithuania", "B3": "B) Poland", "C3": "C) Finland", "D3": "D) Moldova"
+    },
+    "Greek": {
+        "q1": "7. Σε ποια χώρα βρίσκεται η περιοχή της Τοσκάνης;",
+        "q2": "7. Ποια είναι η μεγαλύτερη λίμνη στην Ευρώπη;",
+        "q3": "7. Ποια χώρα συνορεύει με τη Λετονία;",
+        "A1": "A) Γαλλία", "B1": "B) Ιταλία", "C1": "C) Ελλάδα", "D1": "D) Ισπανία",
+        "A2": "A) Μπάλατον", "B2": "B) Βένερν", "C2": "C) Λάντογκα", "D2": "D) Κόμο",
+        "A3": "A) Λιθουανία", "B3": "B) Πολωνία", "C3": "C) Φινλανδία", "D3": "D) Μολδαβία"
+    },
+    "French": {
+        "q1": "7. Dans quel pays se trouve la région de Toscane ?",
+        "q2": "7. Quel est le plus grand lac d'Europe ?",
+        "q3": "7. Quel pays borde la Lettonie ?",
+        "A1": "A) France", "B1": "B) Italie", "C1": "C) Grèce", "D1": "D) Espagne",
+        "A2": "A) Balaton", "B2": "B) Vänern", "C2": "C) Ladoga", "D2": "D) Côme",
+        "A3": "A) Lituanie", "B3": "B) Pologne", "C3": "C) Finlande", "D3": "D) Moldavie"
+    }
+}
+current_language = load_language()
+def tr(key):
+    return translations.get(current_language, translations["English"]).get(key, key)
+
 qu7 = None
 ans = 0
 
@@ -23,13 +65,13 @@ def easy(window, ans6, qu6, qu5, qu4, qu3, qu2, qu1):
     question.setFont(font)
     question.setAlignment(Qt.AlignCenter)
 
-    # Set the question text based on the random variant (all in English)
+    # Set the question text based on the random variant (translated)
     if instance == 1:
-        question.setText('''7. In which country is the region of Tuscany located?''')
+        question.setText(tr("q1"))
     elif instance == 2:
-        question.setText('''7. What is the largest lake in Europe?''')
+        question.setText(tr("q2"))
     elif instance == 3:
-        question.setText('''7. Which country borders Latvia?''')
+        question.setText(tr("q3"))
 
     # Calculate position to center the label horizontally and place it near the top
     window_width = window.frameGeometry().width()
@@ -122,29 +164,29 @@ def easy(window, ans6, qu6, qu5, qu4, qu3, qu2, qu1):
             norway.setText("C) Finland")
             poland.setText("D) Moldova")
 
-    # Create answer buttons and connect them to the correct callback
-    dania = QPushButton("A) Denmark", window)
+    # Create answer buttons with translated text and connect them to the correct callback
+    dania = QPushButton(tr(f"A{instance}"), window)
     dania.resize(500, 120)
     dania.move(250, 140)
     dania.setFont(font)
     dania.show()
     dania.clicked.connect(answer_dania)
 
-    kroatia = QPushButton("B) Croatia", window)
+    kroatia = QPushButton(tr(f"B{instance}"), window)
     kroatia.setFont(font)
     kroatia.resize(500, 120)
     kroatia.move(250, 270)
     kroatia.show()
     kroatia.clicked.connect(answer_kroatia)
 
-    norway = QPushButton("C) Norway", window)
+    norway = QPushButton(tr(f"C{instance}"), window)
     norway.resize(500, 120)
     norway.move(250, 400)
     norway.setFont(font)
     norway.show()
     norway.clicked.connect(answer_norway)
 
-    poland = QPushButton("D) Liechtenstein", window)
+    poland = QPushButton(tr(f"D{instance}"), window)
     poland.resize(500, 120)
     poland.move(250, 530)
     poland.setFont(font)

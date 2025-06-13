@@ -5,6 +5,51 @@ import os
 import sys
 import random
 
+# --- LANGUAGE SUPPORT ---
+language_file = os.path.join(os.path.dirname(__file__), "language.txt")
+def load_language():
+    try:
+        with open(language_file, 'r', encoding='utf-8') as f:
+            lang = f.read().strip().capitalize()
+            if lang in translations:
+                return lang
+    except Exception:
+        pass
+    return "English"
+
+translations = {
+    "English": {
+        "q1": "1. Which of the following countries\nis located on the Scandinavian Peninsula?",
+        "q2": "1. Which of the following countries\nis landlocked (has no access to the sea)?",
+        "q3": "1. Which of the following countries has\nCopenhagen as its capital city?",
+        "A": "A) Denmark",
+        "B": "B) Latvia",
+        "C": "C) Norway",
+        "D": "D) Liechtenstein"
+    },
+    "Greek": {
+        "q1": "1. Ποια από τις παρακάτω χώρες\nβρίσκεται στη Σκανδιναβική Χερσόνησο;",
+        "q2": "1. Ποια από τις παρακάτω χώρες\nδεν έχει πρόσβαση στη θάλασσα;",
+        "q3": "1. Ποια από τις παρακάτω χώρες έχει\nπρωτεύουσα την Κοπεγχάγη;",
+        "A": "A) Δανία",
+        "B": "B) Λετονία",
+        "C": "C) Νορβηγία",
+        "D": "D) Λιχτενστάιν"
+    },
+    "French": {
+        "q1": "1. Lequel des pays suivants\nest situé sur la péninsule scandinave ?",
+        "q2": "1. Lequel des pays suivants\nn'a pas d'accès à la mer ?",
+        "q3": "1. Lequel des pays suivants a\nCopenhague pour capitale ?",
+        "A": "A) Danemark",
+        "B": "B) Lettonie",
+        "C": "C) Norvège",
+        "D": "D) Liechtenstein"
+    }
+}
+current_language = load_language()
+def tr(key):
+    return translations.get(current_language, translations["English"]).get(key, key)
+
 # Main function for the 'Easy' quiz level
 # Sets up the first question and answer buttons
 
@@ -20,16 +65,13 @@ def easy(window):
     question.setFont(font)
     question.setAlignment(Qt.AlignCenter)  # Center the text in the label
 
-    # Set the question text based on the random variant (all in English)
+    # Set the question text based on the random variant (translated)
     if instance == 1:
-        question.setText('''1. Which of the following countries
-is located on the Scandinavian Peninsula?''')
+        question.setText(tr("q1"))
     elif instance == 2:
-        question.setText('''1. Which of the following countries
-is landlocked (has no access to the sea)?''')
+        question.setText(tr("q2"))
     elif instance == 3:
-        question.setText('''1. Which of the following countries has
-Copenhagen as its capital city?''')
+        question.setText(tr("q3"))
 
     # Calculate position to center the label horizontally and place it near the top
     window_width = window.frameGeometry().width()
@@ -108,29 +150,29 @@ Copenhagen as its capital city?''')
             qu1 = False
             next_question()
 
-    # Create answer buttons with English text and connect them to the correct callback
-    dania = QPushButton("A) Denmark", window)
+    # Create answer buttons with translated text and connect them to the correct callback
+    dania = QPushButton(tr("A"), window)
     dania.resize(500, 120)
     dania.move(250, 130)
     dania.setFont(font)
     dania.show()
     dania.clicked.connect(answer_dania)
 
-    andora = QPushButton("B) Latvia", window)
+    andora = QPushButton(tr("B"), window)
     andora.setFont(font)
     andora.resize(500, 120)
     andora.move(250, 260)
     andora.show()
     andora.clicked.connect(answer_latvia)
 
-    norway = QPushButton("C) Norway", window)
+    norway = QPushButton(tr("C"), window)
     norway.resize(500, 120)
     norway.move(250, 390)
     norway.setFont(font)
     norway.show()
     norway.clicked.connect(answer_norway)
 
-    lichtenstain = QPushButton("D) Liechtenstein", window)
+    lichtenstain = QPushButton(tr("D"), window)
     lichtenstain.resize(500, 120)
     lichtenstain.move(250, 520)
     lichtenstain.setFont(font)

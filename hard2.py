@@ -5,6 +5,48 @@ import os
 import sys
 import random
 
+# --- LANGUAGE SUPPORT ---
+language_file = os.path.join(os.path.dirname(__file__), "language.txt")
+def load_language():
+    try:
+        with open(language_file, 'r', encoding='utf-8') as f:
+            lang = f.read().strip().capitalize()
+            if lang in translations:
+                return lang
+    except Exception:
+        pass
+    return "English"
+
+translations = {
+    "English": {
+        "q1": "2. What is the capital of Morocco?",
+        "q2": "2. Which country has the largest population in Africa?",
+        "q3": "2. Which is the second most populous country in Africa after Nigeria?",
+        "A1": "A) Luxor", "B1": "B) Cairo", "C1": "C) Abu Dhabi", "D1": "D) Rabat",
+        "A2": "A) Egypt", "B2": "B) Nigeria", "C2": "C) Ethiopia", "D2": "D) Congo",
+        "A3": "A) Egypt", "B3": "B) Ethiopia", "C3": "C) Congo", "D3": "D) South Africa"
+    },
+    "Greek": {
+        "q1": "2. Ποια είναι η πρωτεύουσα του Μαρόκου;",
+        "q2": "2. Ποια χώρα έχει τον μεγαλύτερο πληθυσμό στην Αφρική;",
+        "q3": "2. Ποια είναι η δεύτερη πιο πολυπληθής χώρα στην Αφρική μετά τη Νιγηρία;",
+        "A1": "A) Λούξορ", "B1": "B) Κάιρο", "C1": "C) Άμπου Ντάμπι", "D1": "D) Ραμπάτ",
+        "A2": "A) Αίγυπτος", "B2": "B) Νιγηρία", "C2": "C) Αιθιοπία", "D2": "D) Κονγκό",
+        "A3": "A) Αίγυπτος", "B3": "B) Αιθιοπία", "C3": "C) Κονγκό", "D3": "D) Νότια Αφρική"
+    },
+    "French": {
+        "q1": "2. Quelle est la capitale du Maroc ?",
+        "q2": "2. Quel pays a la plus grande population d'Afrique ?",
+        "q3": "2. Quel est le deuxième pays le plus peuplé d'Afrique après le Nigéria ?",
+        "A1": "A) Louxor", "B1": "B) Le Caire", "C1": "C) Abou Dabi", "D1": "D) Rabat",
+        "A2": "A) Égypte", "B2": "B) Nigéria", "C2": "C) Éthiopie", "D2": "D) Congo",
+        "A3": "A) Égypte", "B3": "B) Éthiopie", "C3": "C) Congo", "D3": "D) Afrique du Sud"
+    }
+}
+current_language = load_language()
+def tr(key):
+    return translations.get(current_language, translations["English"]).get(key, key)
+
 # Variables for score and correctness of question 2
 qu2 = None  # Whether question 2 was answered correctly
 ans = 0     # User's score for the hard level
@@ -25,13 +67,13 @@ def hard(window, prev_score, qu1):
     question_label.setWordWrap(True)  # Enable word wrap
     question_label.setAlignment(Qt.AlignCenter)
 
-    # Set question text in English
+    # Set question text (translated)
     if question_variant == 1:
-        question_label.setText('''2. What is the capital of Morocco?''')
+        question_label.setText(tr("q1"))
     elif question_variant == 2:
-        question_label.setText('''2. Which country has the largest population in Africa?''')
+        question_label.setText(tr("q2"))
     elif question_variant == 3:
-        question_label.setText('''2. Which is the second most populous country in Africa after Nigeria?''')
+        question_label.setText(tr("q3"))
 
     # Calculate position for the question label
     window_width = window.frameGeometry().width()
@@ -141,23 +183,23 @@ def hard(window, prev_score, qu1):
             except Exception as e:
                 print(f"Error: {e}")
 
-    # Set button texts in English according to the question
+    # Set button texts (translated)
     def set_correct_text():
         if question_variant == 1:
-            button_a.setText("A) Luxor")
-            button_b.setText("B) Cairo")
-            button_c.setText("C) Abu Dhabi")
-            button_d.setText("D) Rabat")
+            button_a.setText(tr("A1"))
+            button_b.setText(tr("B1"))
+            button_c.setText(tr("C1"))
+            button_d.setText(tr("D1"))
         if question_variant == 2:
-            button_a.setText("A) Egypt")
-            button_b.setText("B) Nigeria")
-            button_c.setText("C) Ethiopia")
-            button_d.setText("D) Congo")
+            button_a.setText(tr("A2"))
+            button_b.setText(tr("B2"))
+            button_c.setText(tr("C2"))
+            button_d.setText(tr("D2"))
         if question_variant == 3:
-            button_a.setText("A) Egypt")
-            button_b.setText("B) Ethiopia")
-            button_c.setText("C) Congo")
-            button_d.setText("D) South Africa")
+            button_a.setText(tr("A3"))
+            button_b.setText(tr("B3"))
+            button_c.setText(tr("C3"))
+            button_d.setText(tr("D3"))
 
     # Create answer buttons and connect them to the correct callback
     button_a = QPushButton("A) France", window)
